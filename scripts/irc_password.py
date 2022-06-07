@@ -72,11 +72,11 @@ def irc_password(ts, auth_code, nonce):
     res = [h.digest() for h in md5s]
     xord = bytes(a ^ b for a, b in zip(*res))
     
-    # isn't this just converting endianess?
-    uint_max = 2**32-1
-    ts_le = (ts << 0x18) & uint_max | ((ts >> 8 & 0xff) << 0x10) & uint_max | ((ts >> 0x10 & 0xff) << 8) & uint_max | ts >> 0x18
+    # This is what the decompiler spit out, turns out, this is just swapping endianess
+    # uint_max = 2**32-1
+    # ts_be = (ts << 0x18) & uint_max | ((ts >> 8 & 0xff) << 0x10) & uint_max | ((ts >> 0x10 & 0xff) << 8) & uint_max | ts >> 0x18
     
-    buf = ts_le.to_bytes(0x4, 'little') + xord
+    buf = ts.to_bytes(0x4, 'big') + xord
     res = binascii.hexlify(buf).decode('ascii')
     check = de_encode(41, 0x14, buf, True)[:-1].decode('ascii')
     

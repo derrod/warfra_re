@@ -69,6 +69,7 @@ Java.perform(function () {
 """
 
 # NOTICE: These are the offests from the 32 bit ARM binary of app version 4.15.3.0 (The only rooted phone I had on hand was an old Nexus 5)
+# Offsets were obtained by running `nm --demangle --dynamic <path/to/libdeutil.so>` and then grep'ing for the desired functions
 jscode_native = """
 var moduleName = "libdeutil.so";
 
@@ -79,7 +80,7 @@ var downloadurl_addr = 0x00057651;
 var signpost_addr = 0x000573b1;
 var ssl_set_verify_addr = 0x00067c77;
 var ssl_verify_result_addr = 0x00068a5f;
-var portstr_addr = 0x13E8F0;  // Address of dash "6695-6699" port range
+var portstr_addr = 0x13E8F0;  // Address of "6695-6699" port range
 var curl_setopt_addr = 0x000be695;
 
 Interceptor.attach(Module.findExportByName(null, "dlopen"), {

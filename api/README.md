@@ -53,8 +53,8 @@ print('date:', date)
 ```
 
 Note that you may receive an error response indicating you need to 2FA or a session is still active.
-- Status code 400 & `new hardware detected`: wait for the 2FA code in your email, then sent another POST with an empty JSON object body `{}` to `https://mobile.warframe.com/api/authorizeNewHwid.php?code=<2fa code>`
-- Status code 409 & `Login failed; nonce still set`: Resend login request, but add `"kick": true` to the JSON body
+- Status code 400 & `new hardware detected`: wait for the 2FA code in your email, then sent another POST with an empty JSON object body `{}` to `https://mobile.warframe.com/api/authorizeNewHwid.php?code=<2fa code>` and try again
+- Status code 409 & `Login failed; nonce still set`: Resend login request, but add `"kick": 1` to the JSON body
 
 ## Logout
 

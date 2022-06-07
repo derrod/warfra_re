@@ -1,0 +1,13 @@
+diff --git a/src/common/server.c b/src/common/server.c
+index e14da237..e9b8d0cd 100644
+--- a/src/common/server.c
++++ b/src/common/server.c
+@@ -695,7 +695,7 @@ timeout_auto_reconnect (server *serv)
+ 		serv->recondelay_tag = 0;
+ 		if (!serv->connected && !serv->connecting && serv->server_session)
+ 		{
+-			server_connect (serv, serv->hostname, serv->port, FALSE);
++			server_connect (serv, serv->hostname, serv->port, TRUE);
+ 		}
+ 	}
+ 	return 0;			  /* returning 0 should remove the timeout handler */

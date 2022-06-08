@@ -82,6 +82,7 @@ var ssl_set_verify_addr = 0x00067c77;
 var ssl_verify_result_addr = 0x00068a5f;
 var portstr_addr = 0x13E8F0;  // Address of "6695-6699" port range
 var curl_setopt_addr = 0x000be695;
+var sha256_update_addr = 0x000a1331;
 
 Interceptor.attach(Module.findExportByName(null, "dlopen"), {
     onEnter: function(args) {
@@ -112,6 +113,12 @@ Interceptor.attach(Module.findExportByName(null, "dlopen"), {
                 }
             });
             
+            // SHA256 signing debugging
+            Interceptor.attach(baseAddr.add(sha256_update_addr), {
+                onEnter: function(args) {
+                    send('[*] SHA256_Update invoked, length: ' + parseInt(args[2], 16), args[1].readByteArray(parseInt(args[2], 16)));
+                }
+            });
             // MD5 signing debugging
             Interceptor.attach(baseAddr.add(md5_update_addr), {
                 onEnter: function(args) {

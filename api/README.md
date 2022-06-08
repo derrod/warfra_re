@@ -68,4 +68,4 @@ Send a post to `https://mobile.warframe.com/api/inventory.php?accountId=<account
 
 ### Request signing
 
-Some requests, such as starting a process in the foundry, are signed. The signature process appears to work similar to the IRC password generation, but using SHA256 instead. It is not documented at this moment.
+Some requests, such as starting a process in the foundry, are signed. See `sign_request.py` for a python implementation of how it works.

@@ -8,6 +8,7 @@ Most of the work was done with Ghidra for reversing the native code and jadx to 
 Included are the following things right now:
 - `api/`
   + `login.py` - little helper to login into your account and fetch basic info
+  + `sign_request.py` - Python implementation for web request signing
   + `whirlpool.py` - Pure-python implementaion of the whirlpool hash, but updated to work in python3
   + The `README` here contains some more info about the API
 - `hexchat/`

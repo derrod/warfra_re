@@ -3,6 +3,7 @@ import json
 import webbrowser
 import time
 
+from sign_request import sign
 from whirlpool import Whirlpool
 from getpass import getpass
 from binascii import hexlify, unhexlify
@@ -70,10 +71,25 @@ def main(twofa=False, kick=False):
     
     if r.status_code == 200:
         print('Login success!')
-        json.dump(r.json(), open('login.json', 'w'), indent=2, sort_keys=True)
+        json.dump(r.json(), open('user.json', 'w'), indent=2, sort_keys=True)
+        user_id = r.json()['id']
+        nonce = r.json()['Nonce']
+        
         print('Fetching "Inventory" data...')
-        r = s.post('https://mobile.warframe.com/api/inventory.php?accountId={}&nonce={}'.format(r.json()['id'], r.json()['Nonce']), json=dict())
+        r = s.post('https://mobile.warframe.com/api/inventory.php?accountId={}&nonce={}'.format(user_id, nonce), json=dict())
         json.dump(r.json(), open('inventory.json', 'w'), indent=2, sort_keys=True)
+        
+        # Signed request example; getting extractor data
+        ts = int(time.time())
+        url_path = 'api/drones.php'
+        url_params = '?accountId={}&nonce={}&GetActive=true&signed=true'.format(user_id, nonce)
+        body = json.dumps({})
+        signature = sign(ts, url_path, url_params, body)
+        body += '\n' + signature
+        
+        r = s.post('https://mobile.warframe.com/{}{}'.format(url_path, url_params), data=body)
+        json.dump(r.json(), open('drones.json', 'w'), indent=2, sort_keys=True)
+        
         return
     elif r.status_code == 403:
         print('Whoopsie!')

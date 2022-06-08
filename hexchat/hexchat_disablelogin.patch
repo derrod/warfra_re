@@ -1,13 +1,45 @@
+From ce819a8c0e8d3c2f1a4c6d5d4d58f66d8862b285 Mon Sep 17 00:00:00 2001
+From: Rodney <derrod@users.noreply.github.com>
+Date: Wed, 8 Jun 2022 02:46:32 +0200
+Subject: [PATCH] *really* disable the login :(
+
+---
+ src/common/server.c | 25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
+
 diff --git a/src/common/server.c b/src/common/server.c
-index e14da237..e9b8d0cd 100644
+index e9b8d0cd3..eca9a2ff1 100644
 --- a/src/common/server.c
 +++ b/src/common/server.c
-@@ -695,7 +695,7 @@ timeout_auto_reconnect (server *serv)
- 		serv->recondelay_tag = 0;
- 		if (!serv->connected && !serv->connecting && serv->server_session)
- 		{
--			server_connect (serv, serv->hostname, serv->port, FALSE);
-+			server_connect (serv, serv->hostname, serv->port, TRUE);
- 		}
- 	}
- 	return 0;			  /* returning 0 should remove the timeout handler */
+@@ -380,30 +380,7 @@ server_connected (server * serv)
+ 	serv->connected = TRUE;
+ 	set_nonblocking (serv->sok);
+ 	serv->iotag = fe_input_add (serv->sok, FIA_READ|FIA_EX, server_read, serv);
+-	if (!serv->no_login)
+-	{
+-		EMIT_SIGNAL (XP_TE_CONNECTED, serv->server_session, NULL, NULL, NULL,
+-						 NULL, 0);
+-		if (serv->network)
+-		{
+-			serv->p_login (serv,
+-								(!(((ircnet *)serv->network)->flags & FLAG_USE_GLOBAL) &&
+-								 (((ircnet *)serv->network)->user)) ?
+-								(((ircnet *)serv->network)->user) :
+-								prefs.hex_irc_user_name,
+-								(!(((ircnet *)serv->network)->flags & FLAG_USE_GLOBAL) &&
+-								 (((ircnet *)serv->network)->real)) ?
+-								(((ircnet *)serv->network)->real) :
+-								prefs.hex_irc_real_name);
+-		} else
+-		{
+-			serv->p_login (serv, prefs.hex_irc_user_name, prefs.hex_irc_real_name);
+-		}
+-	} else
+-	{
+-		EMIT_SIGNAL (XP_TE_SERVERCONNECTED, serv->server_session, NULL, NULL,
+-						 NULL, NULL, 0);
+-	}
++	EMIT_SIGNAL (XP_TE_SERVERCONNECTED, serv->server_session, NULL, NULL, NULL, NULL, 0);
+ 
+ 	server_set_name (serv, serv->servername);
+ 	fe_server_event (serv, FE_SE_CONNECT, 0);

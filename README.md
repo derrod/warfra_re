@@ -14,7 +14,9 @@ Included are the following things right now:
 - `hexchat/`
   + `hexchat_disablelogin.patch` - Disables automatic login in HexChat (required to use plugin)
   + `hexchat_plugin.py` - HexChat script to handle Warframe server login (requires manually filling in some info)
+- `irc/`
+  + `irc_password.py` - Python implementaion of the IRC password derivation algorithm`
+  + The `README` here contains additional information about the Warframe IRC alterations
 - `scripts/`
   + `decrypt_resources.py` - decrypt JavaScript of the app's embedded web UI
   + `frida_utilities.py` - Frida script with large amount of hooks for obtaining keys, disable SSL verification, etc.
-  + `irc_password.py` - Python implementaion of the IRC password derivation algorithm

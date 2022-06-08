@@ -2,7 +2,7 @@ import time
 import hashlib
 import binascii
 
-psk = open('psk.bin', 'rb').read()
+psk = open('../scripts/psk.bin', 'rb').read()
 
 
 def de_encode(out_length, in_length, input_buf, lowercase=False):

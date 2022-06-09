@@ -80,6 +80,7 @@ def main(twofa=False, kick=False):
         json.dump(r.json(), open('inventory.json', 'w'), indent=2, sort_keys=True)
         
         # Signed request example; getting extractor data
+        print('Fetching "Drones" data...')
         ts = int(time.time())
         url_path = 'api/drones.php'
         url_params = '?accountId={}&nonce={}&GetActive=true&signed=true'.format(user_id, nonce)

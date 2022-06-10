@@ -1,5 +1,7 @@
 # Warframe App Reverse Engineering
 
+**Disclaimer: While these scripts mimic the behaviour of the official app(s) and only interact in with the API in a read-only manner, they may still violate the Warframe or Digital Extremes EULA/TOS and any usage of them is at your own risk.**
+
 This repo contains some scripts and tool written while reverse-engineering the Warframe Mobile API.
 This currently is limited to authentication and the IRC-based chat.
 
@@ -20,3 +22,5 @@ Included are the following things right now:
 - `scripts/`
   + `decrypt_resources.py` - decrypt JavaScript of the app's embedded web UI
   + `frida_utilities.py` - Frida script with large amount of hooks for obtaining keys, disable SSL verification, etc.
+- `twitch/`
+  + `arsenal.py` - Script to fetch loadout information for users that have enabled loadout sharing for the arsenal extension

@@ -24,12 +24,24 @@ def get_unique_id():
     return date
 
 
-def main(twofa=False, kick=False):
+def main(twofa=False, kick=False, do_logout=True, allow_kick=False, logout=False):
     s = requests.session()
     # s.proxies = dict(http='192.168.178.32:8888', https='192.168.178.32:8888')
     # s.verify = False
     s.headers['Content-Type'] = 'application/octet-stream'
     s.headers['user-agent'] = ''
+    
+    if logout:
+        try:
+            user = json.load(open('user.json'))
+        except:
+            print('No user data to be loaded?')
+            return
+        
+        params = dict(accountId=user['id'], nonce=user['Nonce'])
+        r = s.post('https://mobile.warframe.com/api/logout.php', params=params, json=dict())
+        print('Logout response:', r.text, '(1 means success)')
+        return
     
     try:
         creds = json.load(open('credentials.json', 'r'))
@@ -91,6 +103,12 @@ def main(twofa=False, kick=False):
         r = s.post('https://mobile.warframe.com/{}{}'.format(url_path, url_params), data=body)
         json.dump(r.json(), open('drones.json', 'w'), indent=2, sort_keys=True)
         
+        # Log out to prevent warning that a session is still logged in
+        # (note: disable this if you wish to use the nonce for IRC login)
+        if do_logout:
+            params = dict(accountId=user_id, nonce=nonce)
+            r = s.post('https://mobile.warframe.com/api/logout.php', params=params, json=dict())
+            print('Logout response:', r.text, '(1 means success)')
         return
     elif r.status_code == 403:
         print('Whoopsie!')
@@ -103,12 +121,26 @@ def main(twofa=False, kick=False):
         r = s.post('https://mobile.warframe.com/api/authorizeNewHwid.php?code=' + _twofa, json=dict())
         return main(twofa=True)
     elif r.status_code == 409 and 'nonce still set' in r.text:
-        print('Session still active, retrying with kick...')
-        return main(kick=True)
+        if allow_kick:
+            print('Session still active, retrying with kick...')
+            return main(kick=True, do_logout=do_logout)
+        else:
+            print('Session still active, not kicking!')
+            return
     else:
         print('Unknown Response status:', r.status_code)
         print('Response body:\n\n', r.content)
 
 
 if __name__ == '__main__':
-    main()
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Login to WF API and do some stuff')
+    parser.add_argument('-k', '--allow-kicking', action='store_true', dest='allow_kick',
+                        help='Allow kicking a currently active session')
+    parser.add_argument('-l', '--logout', action='store_true', dest='logout',
+                        help='Load saved user data and attempt log out')
+    parser.add_argument('-n', '--no-logout', action='store_true', dest='no_logout',
+                        help='Do not log out after fetching data (e.g. for IRC usage)')
+    args = parser.parse_args()
+    main(allow_kick=args.allow_kick, do_logout=not args.no_logout, logout=args.logout)

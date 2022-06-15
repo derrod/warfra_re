@@ -1,10 +1,10 @@
+import hashlib
 import requests
 import json
 import webbrowser
 import time
 
 from sign_request import sign
-from whirlpool import Whirlpool
 from getpass import getpass
 from binascii import hexlify, unhexlify
 
@@ -60,7 +60,7 @@ def main(twofa=False, kick=False, do_logout=True, allow_kick=False, logout=False
     pwhash = creds.get('pwhash')
     if not pwhash:
         pw = getpass()
-        creds['pwhash'] = Whirlpool(pw).hexdigest()
+        creds['pwhash'] = hashlib.new('whirlpool', pw.encode('utf-8')).hexdigest()
     
     json.dump(creds, open('credentials.json', 'w'), indent=2, sort_keys=True)
     
@@ -68,7 +68,7 @@ def main(twofa=False, kick=False, do_logout=True, allow_kick=False, logout=False
     if not cookie:
         buf = unhexlify(SALT)
         buf += '{}/{}'.format(creds['email'], creds['pwhash']).encode('utf-8')
-        _hash = Whirlpool(buf).hexdigest()
+        _hash = hashlib.new('whirlpool', buf).hexdigest()
         webbrowser.open('https://mobile.warframe.com/api/mobileCaptcha/mblCaptcha.php?input=' + _hash)
         cookie = input('Value of "wfarggdsh" cookie: ').strip()
         creds['cookie'] = cookie

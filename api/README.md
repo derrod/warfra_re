@@ -6,18 +6,19 @@ Before we can begin, we need a cookie we get after completing the captcha. The w
 
 To get a working captcha response cookie we need to hash our username, password, and a static salt from the app. This works as following: `whirlpool( salt + email + '/' + whirlpool(password))`.
 
-The salt for the current app version (in hexadecimal) is `7714ae5c45fd1c5991daada98fbbe4e41d907323d7375120cb111d2b3f4a3502`. In python, you can do this by using the included whirpool implementation (`whirlpool.py`).
+The salt for the current app version (in hexadecimal) is `7714ae5c45fd1c5991daada98fbbe4e41d907323d7375120cb111d2b3f4a3502`.  
+In python, you can do this by using the included whirpool implementation in hashlib (`hashlib.new('whirlpool')`).
 
 Example:
 ```python
-from whirlpool import Whirlpool
+import hashlib
 from binascii import hexlify, unhexlify
 
-pwhash = Whirlpool('<password>').hexdigest()
+pwhash = hashlib.new('whirlpool', '<password>'.encode('utf-8')).hexdigest()
 buf = unhexlify('7714ae5c45fd1c5991daada98fbbe4e41d907323d7375120cb111d2b3f4a3502')
 buf += '<email>/{}'.format(pwhash).encode('utf-8')
 
-print('Result:', Whirlpool(buf).hexdigest())
+print('Result:', hashlib.new('whirlpool', buf).hexdigest())
 ```
 
 Finally, open `https://mobile.warframe.com/api/mobileCaptcha/mblCaptcha.php?input=<hash>` in a browser and verify the captcha. Afterwards, grab the `wfarggdsh` cookie, that is your `c` variable for the login.

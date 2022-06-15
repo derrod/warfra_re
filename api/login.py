@@ -97,8 +97,9 @@ def main(twofa=False, kick=False, do_logout=True, allow_kick=False, logout=False
         url_path = 'api/drones.php'
         url_params = '?accountId={}&nonce={}&GetActive=true&signed=true'.format(user_id, nonce)
         body = json.dumps({})
-        signature = sign(ts, url_path, url_params, body)
-        body += '\n' + signature
+        # Turns out that while "signed" is in the URL parameters for this one, it's not actually signed, thanks DE!
+        # signature = sign(ts, url_path, url_params, body)
+        # body += '\n' + signature
         
         r = s.post('https://mobile.warframe.com/{}{}'.format(url_path, url_params), data=body)
         json.dump(r.json(), open('drones.json', 'w'), indent=2, sort_keys=True)

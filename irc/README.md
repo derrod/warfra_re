@@ -13,6 +13,8 @@ The channel list can be downloaded from the servers. Most channel names use shor
 
 Most prefixes are relatively easy to guess, "G" for "General", "T" for "Trading", "R" for "Recruiting", and "Q" for "Q&A". There are channels for specific zones and clans as well. The latter are prefixed with "C" followed by the Clan ID.
 
+**Note:** If you have a rooted phone the IP and userid/nonce can be obtained from the Warframe Companion config file at `/data/data/com.digitalextremes.warframenexus/shared_prefs/titanium.xml` (see `playerInfo`).
+
 ## HexChat plugin
 
 See the `hexchat/` folder for details

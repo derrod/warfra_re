@@ -12,3 +12,5 @@ This will still need the following:
 - Nick, user-id, and valid nonce in `hexchat_plugin.py`
 - Loading `hexchat_plugin.py` *before* connecting
 - Connecting using preconfigured "Warframe IRC" server
+
+**Note:** If you have a rooted phone the userid/nonce can be obtained from the Warframe Companion config file at `/data/data/com.digitalextremes.warframenexus/shared_prefs/titanium.xml` (see `playerInfo`).
